@@ -16,7 +16,7 @@ public class UserService {
 
     public UserDTO getUserById(Long id) {
         return repo.findById(id)
-                .map(u -> new UserDTO(u.getId(), u.getNombre()))
+                .map(u -> new UserDTO(u.getId(), u.getName()))
                 .orElse(null);
     }
 }

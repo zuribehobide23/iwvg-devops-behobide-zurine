@@ -2,13 +2,13 @@ package es.upm.miw.devops.resources.dtos;
 
 public class UserDTO {
     private Long id;
-    private String nombre;
+    private String name;
 
-    public UserDTO(Long id, String nombre) {
+    public UserDTO(Long id, String name) {
         this.id = id;
-        this.nombre = nombre;
+        this.name = name;
     }
 
     public Long getId() { return id; }
-    public String getNombre() { return nombre; }
+    public String getName() { return name; }
 }
