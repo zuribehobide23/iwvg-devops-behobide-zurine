@@ -1,15 +1,37 @@
+version: '3.8'
+
 services:
+
+  postgres:
+    image: postgres:15.10
+    container_name: postgres-server
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: iwvgdevopsdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - devopsNet
+
   devops:
     build: .
     image: devops:latest
+    container_name: devops-app
     restart: always
+    depends_on:
+      - postgres
     ports:
       - "8080:8080"
     networks:
       - devopsNet
 
+volumes:
+  postgres_data:
+
 networks:
   devopsNet:
     external: true
-
-#> docker compose up --build -d

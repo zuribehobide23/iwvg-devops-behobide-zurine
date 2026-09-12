@@ -8,6 +8,14 @@ spring:
     type: none
   jackson:
     default-property-inclusion: NON_NULL
+  datasource:
+    url: jdbc:postgresql://postgres-server:5432/iwvgdevopsdb
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
 
 info:
   app:

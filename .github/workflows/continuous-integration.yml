@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [develop,v-*,master]
+    branches: [develop,feature-*,master]
 
 jobs:
   devops:
@@ -37,9 +37,6 @@ jobs:
       - name: ✅ Run Unit & Integration Test & Functional Test
         run: mvn -B verify
 
-      # -------------------------------------------------------------
-      # PASO: Notificación de Éxito en Slack
-      # -------------------------------------------------------------
       - name: Notificar éxito a Slack
         if: success() # Solo se dispara si la compilación y tests fueron exitosos
         uses: slackapi/slack-github-action@v1.26.0
@@ -51,9 +48,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      # -------------------------------------------------------------
-      # PASO: Notificación de Fallo en Slack
-      # -------------------------------------------------------------
       - name: Notificar fallo a Slack
         if: failure() # Solo se dispara si falló algún paso anterior
         uses: slackapi/slack-github-action@v1.26.0
