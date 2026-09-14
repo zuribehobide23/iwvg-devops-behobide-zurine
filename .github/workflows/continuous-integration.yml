@@ -34,6 +34,24 @@ jobs:
           languages: java
           queries: security-extended
 
+      - name: Start PostgreSQL
+        run: | 
+          docker run -d \ 
+            --name postgres-server \ 
+            -e POSTGRES_USER=postgres \ 
+            -e POSTGRES_PASSWORD=postgres \ 
+            -e POSTGRES_DB=iwvgdevopsdb \ 
+            -p 5432:5432 \ 
+            -v "${{ github.workspace }}/init.sql:/docker-entrypoint-initdb.d/init.sql" \ 
+            postgres:15.10 
+
+      - name: Wait for PostgreSQL
+        run: | 
+          until docker exec postgres-server pg_isready -U postgres -d iwvgdevopsdb; do 
+            echo "Waiting for PostgreSQL..." 
+            sleep 2 
+          done          
+
       - name: ✅ Run Unit & Integration Test & Functional Test
         run: mvn -B verify
 
