@@ -1,6 +1,6 @@
 package es.upm.miw.devops.functionaltests;
 
-import es.upm.miw.devops.rest.SystemResource;
+import es.upm.miw.devops.resources.SystemResource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
