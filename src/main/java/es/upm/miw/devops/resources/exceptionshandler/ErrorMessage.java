@@ -1,4 +1,4 @@
-package es.upm.miw.devops.rest.exceptionshandler;
+package es.upm.miw.devops.resources.exceptionshandler;
 
 public class ErrorMessage {
 
