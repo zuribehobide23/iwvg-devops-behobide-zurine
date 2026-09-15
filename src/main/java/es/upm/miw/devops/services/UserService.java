@@ -40,11 +40,20 @@ public class UserService {
                 user.getCity(),
                 user.getProvince(),
                 user.getPostalCode(),
-                user.isBillable()
+                user.isBillable(),
+                user.isActive()
         );
     }
 
     public void deleteUser(Long id) {
         repo.deleteById(id);
+    }
+
+    public void activateUser(Long id) {
+        User user = repo.findById(id)
+                .orElseThrow();
+
+        user.setActive(true);
+        repo.save(user);
     }
 }

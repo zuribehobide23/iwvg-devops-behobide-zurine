@@ -12,11 +12,12 @@ public class UserDTO {
     private String province;
     private String postalCode;
     private boolean billable;
+    private boolean active;
 
     public UserDTO(Long id, String firstName, String familyName,
                    String email, String identity, String address,
                    String city, String province, String postalCode,
-                   boolean billable) {
+                   boolean billable, boolean active) {
         this.id = id;
         this.firstName = firstName;
         this.familyName = familyName;
@@ -27,6 +28,7 @@ public class UserDTO {
         this.province = province;
         this.postalCode = postalCode;
         this.billable = billable;
+        this.active = active;
     }
 
     public Long getId() {
@@ -67,5 +69,9 @@ public class UserDTO {
 
     public boolean isBillable() {
         return billable;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

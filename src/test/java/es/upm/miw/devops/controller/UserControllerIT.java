@@ -10,8 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = Application.class)
@@ -63,5 +62,30 @@ class UserControllerIT {
 
         mockMvc.perform(delete("/user/" + savedUser.getId()))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testActivateUser() throws Exception {
+        User user = new User(
+                "Test",
+                "Active",
+                "test.active@example.com",
+                "",
+                "Test Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        user.setActive(false);
+
+        User savedUser = userRepository.save(user);
+
+        mockMvc.perform(put("/user/" + savedUser.getId() + "/active"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/user/" + savedUser.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.active").value(true));
     }
 }
