@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -169,5 +170,46 @@ class UserServiceTest {
         service.deleteUser(1L);
 
         Mockito.verify(repo).deleteById(1L);
+    }
+
+    @Test
+    void testActivateUser() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user = new User(
+                "Test",
+                "Active",
+                "test.active@example.com",
+                "99999999Z",
+                "Test Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        user.setActive(false);
+
+        Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user));
+
+        service.activateUser(1L);
+
+        assertTrue(user.isActive());
+        Mockito.verify(repo).save(user);
+    }
+
+    @Test
+    void testActivateUserWhenUserDoesNotExist() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                NoSuchElementException.class,
+                () -> service.activateUser(99L)
+        );
+
+        Mockito.verify(repo, Mockito.never()).save(Mockito.any());
     }
 }
