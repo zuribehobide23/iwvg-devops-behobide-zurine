@@ -24,4 +24,9 @@ public class UserController {
     public List<UserDTO> getBillableUsers() {
         return userService.getBillableUsers();
     }
+
+    @DeleteMapping("/user/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
 }

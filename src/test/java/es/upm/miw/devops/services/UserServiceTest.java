@@ -160,4 +160,14 @@ class UserServiceTest {
 
         assertFalse(user.isBillable());
     }
+
+    @Test
+    void testDeleteUser() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        service.deleteUser(1L);
+
+        Mockito.verify(repo).deleteById(1L);
+    }
 }
