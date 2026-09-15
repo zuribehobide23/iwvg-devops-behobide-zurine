@@ -29,4 +29,9 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
+
+    @PutMapping("/user/{id}/active")
+    public void activateUser(@PathVariable Long id) {
+        userService.activateUser(id);
+    }
 }

@@ -9,7 +9,8 @@ CREATE TABLE users (
                        address VARCHAR(150),
                        city VARCHAR(100),
                        province VARCHAR(100),
-                       postal_code VARCHAR(20)
+                       postal_code VARCHAR(20),
+                       active BOOLEAN DEFAULT FALSE
 );
 
 -- Billable user

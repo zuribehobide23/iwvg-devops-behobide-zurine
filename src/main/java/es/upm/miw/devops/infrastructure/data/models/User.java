@@ -29,6 +29,8 @@ public class User {
     @Column(name = "postal_code")
     private String postalCode;
 
+    private boolean active = false;
+
     public User() {
     }
 
@@ -126,5 +128,13 @@ public class User {
 
     private boolean hasContent(String value) {
         return value != null && !value.isBlank();
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
