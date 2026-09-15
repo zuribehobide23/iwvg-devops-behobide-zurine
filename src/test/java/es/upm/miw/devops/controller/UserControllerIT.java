@@ -24,6 +24,19 @@ class UserControllerIT {
         mockMvc.perform(get("/user/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Zurine"));
+                .andExpect(jsonPath("$.firstName").value("Zurine"))
+                .andExpect(jsonPath("$.familyName").value("Behobide"))
+                .andExpect(jsonPath("$.billable").value(true));
+    }
+
+    @Test
+    void testGetBillableUsers() throws Exception {
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].firstName").value("Zurine"))
+                .andExpect(jsonPath("$[0].familyName").value("Behobide"))
+                .andExpect(jsonPath("$[0].billable").value(true));
     }
 }

@@ -4,8 +4,9 @@ import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -14,8 +15,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public UserDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/users")
+    public List<UserDTO> getBillableUsers() {
+        return userService.getBillableUsers();
     }
 }
