@@ -43,4 +43,8 @@ public class UserService {
                 user.isBillable()
         );
     }
+
+    public void deleteUser(Long id) {
+        repo.deleteById(id);
+    }
 }
