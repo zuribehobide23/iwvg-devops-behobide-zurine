@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: iwvg-devops-behobide-zurine
   profiles:
     active: dev
   output:
@@ -8,6 +10,8 @@ spring:
     type: none
   jackson:
     default-property-inclusion: NON_NULL
+  jpa:
+    open-in-view: false
 
 info:
   app:
