@@ -2,6 +2,7 @@ package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
 import es.upm.miw.devops.infrastructure.data.models.User;
+import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +38,21 @@ public class UserService {
 
         user.setActive(true);
         userRepository.save(user);
+    }
+
+    public User updateUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow();
+
+        user.setFirstName(userDTO.getFirstName());
+        user.setFamilyName(userDTO.getFamilyName());
+        user.setEmail(userDTO.getEmail());
+        user.setIdentity(userDTO.getIdentity());
+        user.setAddress(userDTO.getAddress());
+        user.setCity(userDTO.getCity());
+        user.setProvince(userDTO.getProvince());
+        user.setPostalCode(userDTO.getPostalCode());
+
+        return userRepository.save(user);
     }
 }
