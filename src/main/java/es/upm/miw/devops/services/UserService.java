@@ -6,6 +6,7 @@ import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -54,5 +55,15 @@ public class UserService {
         user.setPostalCode(userDTO.getPostalCode());
 
         return userRepository.save(user);
+    }
+
+    public void updateUsersActive(List<UserDTO> usersDTO) {
+        usersDTO.forEach(userDTO -> {
+            User user = userRepository.findById(userDTO.getId())
+                    .orElseThrow();
+
+            user.setActive(userDTO.isActive());
+            userRepository.save(user);
+        });
     }
 }
