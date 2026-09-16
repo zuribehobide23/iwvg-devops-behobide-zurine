@@ -1,5 +1,7 @@
 package es.upm.miw.devops.resources.dtos;
 
+import es.upm.miw.devops.infrastructure.data.models.User;
+
 public class UserDTO {
 
     private Long id;
@@ -13,6 +15,9 @@ public class UserDTO {
     private String postalCode;
     private boolean billable;
     private boolean active;
+
+    public UserDTO() {
+    }
 
     public UserDTO(Long id, String firstName, String familyName,
                    String email, String identity, String address,
@@ -29,6 +34,20 @@ public class UserDTO {
         this.postalCode = postalCode;
         this.billable = billable;
         this.active = active;
+    }
+
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.familyName = user.getFamilyName();
+        this.email = user.getEmail();
+        this.identity = user.getIdentity();
+        this.address = user.getAddress();
+        this.city = user.getCity();
+        this.province = user.getProvince();
+        this.postalCode = user.getPostalCode();
+        this.billable = user.isBillable();
+        this.active = user.isActive();
     }
 
     public Long getId() {
