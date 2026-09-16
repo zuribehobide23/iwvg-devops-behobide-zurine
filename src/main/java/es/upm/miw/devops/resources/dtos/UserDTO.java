@@ -93,4 +93,40 @@ public class UserDTO {
     public boolean isActive() {
         return active;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

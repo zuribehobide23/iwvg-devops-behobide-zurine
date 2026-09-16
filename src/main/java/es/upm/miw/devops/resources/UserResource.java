@@ -43,4 +43,9 @@ public class UserResource {
     public void activateUser(@PathVariable Long id) {
         userService.activateUser(id);
     }
+
+    @PutMapping(USER_ID)
+    public UserDTO updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        return new UserDTO(userService.updateUser(id, userDTO));
+    }
 }
