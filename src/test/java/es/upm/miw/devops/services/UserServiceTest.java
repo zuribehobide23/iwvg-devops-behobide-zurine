@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -428,6 +429,75 @@ class UserServiceTest {
         assertThrows(
                 NoSuchElementException.class,
                 () -> service.updateUser(99L, userDTO)
+        );
+
+        Mockito.verify(repo, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void testUpdateUsersActive() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user1 = new User(
+                "Zurine",
+                "Behobide",
+                "zurine@example.com",
+                "12345678A",
+                "Main Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        User user2 = new User(
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "",
+                "Main Street 2",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        user1.setActive(false);
+        user2.setActive(false);
+
+        UserDTO userDTO1 = new UserDTO();
+        userDTO1.setId(1L);
+        userDTO1.setActive(true);
+
+        UserDTO userDTO2 = new UserDTO();
+        userDTO2.setId(2L);
+        userDTO2.setActive(true);
+
+        Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user1));
+        Mockito.when(repo.findById(2L)).thenReturn(Optional.of(user2));
+
+        service.updateUsersActive(Arrays.asList(userDTO1, userDTO2));
+
+        assertTrue(user1.isActive());
+        assertTrue(user2.isActive());
+
+        Mockito.verify(repo).save(user1);
+        Mockito.verify(repo).save(user2);
+    }
+
+    @Test
+    void testUpdateUsersActiveWhenUserDoesNotExist() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(99L);
+        userDTO.setActive(true);
+
+        Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                NoSuchElementException.class,
+                () -> service.updateUsersActive(List.of(userDTO))
         );
 
         Mockito.verify(repo, Mockito.never()).save(Mockito.any());

@@ -14,6 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
@@ -253,5 +255,36 @@ class UserResourceFT {
                                 "Gipuzkoa",
                                 "20001"
                         ));
+    }
+
+    @Test
+    void testUpdateUsersActive() {
+        UserDTO user1 = new UserDTO();
+        user1.setId(1L);
+        user1.setActive(true);
+
+        UserDTO user2 = new UserDTO();
+        user2.setId(2L);
+        user2.setActive(true);
+
+        this.client.patch()
+                .uri("/user")
+                .bodyValue(List.of(user1, user2))
+                .exchange()
+                .expectStatus().isOk();
+
+        this.client.get()
+                .uri("/user/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO.class)
+                .value(user -> assertThat(user.isActive()).isTrue());
+
+        this.client.get()
+                .uri("/user/2")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO.class)
+                .value(user -> assertThat(user.isActive()).isTrue());
     }
 }
