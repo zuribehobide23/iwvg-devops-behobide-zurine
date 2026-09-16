@@ -2,7 +2,7 @@ package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
 import es.upm.miw.devops.infrastructure.data.models.User;
-import es.upm.miw.devops.resources.dtos.UserDTO;
+import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -32,12 +32,12 @@ class UserServiceTest {
 
         Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user));
 
-        UserDTO dto = service.getUserById(1L);
+        User result = service.getUserById(1L);
 
-        assertNotNull(dto);
-        assertEquals("Zurine", dto.getFirstName());
-        assertEquals("Behobide", dto.getFamilyName());
-        assertTrue(dto.isBillable());
+        assertNotNull(result);
+        assertEquals("Zurine", result.getFirstName());
+        assertEquals("Behobide", result.getFamilyName());
+        assertTrue(result.isBillable());
     }
 
     @Test
@@ -47,13 +47,13 @@ class UserServiceTest {
 
         Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
 
-        UserDTO dto = service.getUserById(99L);
+        User result = service.getUserById(99L);
 
-        assertNull(dto);
+        assertNull(result);
     }
 
     @Test
-    void testGetBillableUsers() {
+    void testFindAllUsers() {
         UserRepository repo = Mockito.mock(UserRepository.class);
         UserService service = new UserService(repo);
 
@@ -82,18 +82,30 @@ class UserServiceTest {
         Mockito.when(repo.findAll())
                 .thenReturn(List.of(billableUser, nonBillableUser));
 
-        List<UserDTO> users = service.getBillableUsers();
+        UserFindCriteria criteria = new UserFindCriteria();
 
-        assertEquals(1, users.size());
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(2, users.size());
         assertEquals("Zurine", users.get(0).getFirstName());
-        assertEquals("Behobide", users.get(0).getFamilyName());
-        assertTrue(users.get(0).isBillable());
+        assertEquals("Oihana", users.get(1).getFirstName());
     }
 
     @Test
-    void testGetBillableUsersWhenThereAreNoBillableUsers() {
+    void testFindByBillable() {
         UserRepository repo = Mockito.mock(UserRepository.class);
         UserService service = new UserService(repo);
+
+        User billableUser = new User(
+                "Zurine",
+                "Behobide",
+                "zurine@example.com",
+                "12345678A",
+                "Main Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
 
         User nonBillableUser = new User(
                 "Oihana",
@@ -107,11 +119,142 @@ class UserServiceTest {
         );
 
         Mockito.when(repo.findAll())
-                .thenReturn(List.of(nonBillableUser));
+                .thenReturn(List.of(billableUser, nonBillableUser));
 
-        List<UserDTO> users = service.getBillableUsers();
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setBillable(true);
 
-        assertTrue(users.isEmpty());
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Zurine", users.get(0).getFirstName());
+        assertTrue(users.get(0).isBillable());
+    }
+
+    @Test
+    void testFindByNotBillable() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User billableUser = new User(
+                "Zurine",
+                "Behobide",
+                "zurine@example.com",
+                "12345678A",
+                "Main Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        User nonBillableUser = new User(
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "",
+                "Main Street 2",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        Mockito.when(repo.findAll()).thenReturn(List.of(billableUser, nonBillableUser));
+
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setBillable(false);
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Oihana", users.get(0).getFirstName());
+        assertFalse(users.get(0).isBillable());
+    }
+
+    @Test
+    void testFindByActive() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User activeUser = new User(
+                "Active",
+                "User",
+                "active@example.com",
+                "11111111A",
+                "Test Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        activeUser.setActive(true);
+
+        User inactiveUser = new User(
+                "Inactive",
+                "User",
+                "inactive@example.com",
+                "22222222B",
+                "Test Street 2",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        inactiveUser.setActive(false);
+
+        Mockito.when(repo.findAll())
+                .thenReturn(List.of(activeUser, inactiveUser));
+
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setActive(true);
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Active", users.get(0).getFirstName());
+        assertTrue(users.get(0).isActive());
+    }
+
+    @Test
+    void testFindByInactive() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User activeUser = new User(
+                "Active",
+                "User",
+                "active@example.com",
+                "11111111A",
+                "Test Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        activeUser.setActive(true);
+
+        User inactiveUser = new User(
+                "Inactive",
+                "User",
+                "inactive@example.com",
+                "22222222B",
+                "Test Street 2",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        inactiveUser.setActive(false);
+
+        Mockito.when(repo.findAll()).thenReturn(List.of(activeUser, inactiveUser));
+
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setActive(false);
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Inactive", users.get(0).getFirstName());
+        assertFalse(users.get(0).isActive());
     }
 
     @Test
