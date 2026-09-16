@@ -1,5 +1,7 @@
 package es.upm.miw.devops.resources.dtos;
 
+import es.upm.miw.devops.infrastructure.data.models.User;
+
 public class UserDTO {
 
     private Long id;
@@ -13,6 +15,9 @@ public class UserDTO {
     private String postalCode;
     private boolean billable;
     private boolean active;
+
+    public UserDTO() {
+    }
 
     public UserDTO(Long id, String firstName, String familyName,
                    String email, String identity, String address,
@@ -31,8 +36,26 @@ public class UserDTO {
         this.active = active;
     }
 
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.familyName = user.getFamilyName();
+        this.email = user.getEmail();
+        this.identity = user.getIdentity();
+        this.address = user.getAddress();
+        this.city = user.getCity();
+        this.province = user.getProvince();
+        this.postalCode = user.getPostalCode();
+        this.billable = user.isBillable();
+        this.active = user.isActive();
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -73,5 +96,41 @@ public class UserDTO {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

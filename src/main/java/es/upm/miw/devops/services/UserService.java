@@ -3,57 +3,67 @@ package es.upm.miw.devops.services;
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.resources.dtos.UserDTO;
+import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class UserService {
 
-    private final UserRepository repo;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository repo) {
-        this.repo = repo;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public UserDTO getUserById(Long id) {
-        return repo.findById(id)
-                .map(this::toDTO)
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
                 .orElse(null);
     }
 
-    public List<UserDTO> getBillableUsers() {
-        return repo.findAll().stream()
-                .filter(User::isBillable)
-                .map(this::toDTO)
-                .toList();
-    }
-
-    private UserDTO toDTO(User user) {
-        return new UserDTO(
-                user.getId(),
-                user.getFirstName(),
-                user.getFamilyName(),
-                user.getEmail(),
-                user.getIdentity(),
-                user.getAddress(),
-                user.getCity(),
-                user.getProvince(),
-                user.getPostalCode(),
-                user.isBillable(),
-                user.isActive()
-        );
+    public Stream<User> find(UserFindCriteria criteria) {
+        return userRepository.findAll().stream()
+                .filter(user -> !criteria.hasActive() || user.isActive() == criteria.getActive())
+                .filter(user -> !criteria.hasBillable() || user.isBillable() == criteria.getBillable());
     }
 
     public void deleteUser(Long id) {
-        repo.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     public void activateUser(Long id) {
-        User user = repo.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow();
 
         user.setActive(true);
-        repo.save(user);
+        userRepository.save(user);
+    }
+
+    public User updateUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow();
+
+        user.setFirstName(userDTO.getFirstName());
+        user.setFamilyName(userDTO.getFamilyName());
+        user.setEmail(userDTO.getEmail());
+        user.setIdentity(userDTO.getIdentity());
+        user.setAddress(userDTO.getAddress());
+        user.setCity(userDTO.getCity());
+        user.setProvince(userDTO.getProvince());
+        user.setPostalCode(userDTO.getPostalCode());
+
+        return userRepository.save(user);
+    }
+
+    public void updateUsersActive(List<UserDTO> usersDTO) {
+        usersDTO.forEach(userDTO -> {
+            User user = userRepository.findById(userDTO.getId())
+                    .orElseThrow();
+
+            user.setActive(userDTO.isActive());
+            userRepository.save(user);
+        });
     }
 }
