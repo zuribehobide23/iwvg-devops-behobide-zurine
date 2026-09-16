@@ -207,4 +207,51 @@ class UserResourceFT {
                 .expectBody(UserDTO.class)
                 .value(result -> assertThat(result.isActive()).isTrue());
     }
+
+    @Test
+    void testUpdateUser() {
+        UserDTO userDTO = new UserDTO(
+                1L,
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "87654321B",
+                "Main Street 2",
+                "Donostia",
+                "Gipuzkoa",
+                "20001",
+                true,
+                false
+        );
+
+        this.client.put()
+                .uri("/user/1")
+                .bodyValue(userDTO)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO.class)
+                .value(result -> assertThat(result)
+                        .extracting(
+                                UserDTO::getId,
+                                UserDTO::getFirstName,
+                                UserDTO::getFamilyName,
+                                UserDTO::getEmail,
+                                UserDTO::getIdentity,
+                                UserDTO::getAddress,
+                                UserDTO::getCity,
+                                UserDTO::getProvince,
+                                UserDTO::getPostalCode
+                        )
+                        .containsExactly(
+                                1L,
+                                "Oihana",
+                                "Example",
+                                "oihana@example.com",
+                                "87654321B",
+                                "Main Street 2",
+                                "Donostia",
+                                "Gipuzkoa",
+                                "20001"
+                        ));
+    }
 }

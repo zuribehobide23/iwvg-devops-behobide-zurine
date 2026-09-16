@@ -2,6 +2,7 @@ package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
 import es.upm.miw.devops.infrastructure.data.models.User;
+import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -351,6 +352,82 @@ class UserServiceTest {
         assertThrows(
                 NoSuchElementException.class,
                 () -> service.activateUser(99L)
+        );
+
+        Mockito.verify(repo, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void testUpdateUser() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user = new User(
+                "Zurine",
+                "Behobide",
+                "zurine@example.com",
+                "12345678A",
+                "Main Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300"
+        );
+
+        UserDTO userDTO = new UserDTO(
+                1L,
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "87654321B",
+                "Main Street 2",
+                "Donostia",
+                "Gipuzkoa",
+                "20001",
+                true,
+                false
+        );
+
+        Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user));
+        Mockito.when(repo.save(user)).thenReturn(user);
+
+        User result = service.updateUser(1L, userDTO);
+
+        assertEquals("Oihana", result.getFirstName());
+        assertEquals("Example", result.getFamilyName());
+        assertEquals("oihana@example.com", result.getEmail());
+        assertEquals("87654321B", result.getIdentity());
+        assertEquals("Main Street 2", result.getAddress());
+        assertEquals("Donostia", result.getCity());
+        assertEquals("Gipuzkoa", result.getProvince());
+        assertEquals("20001", result.getPostalCode());
+
+        Mockito.verify(repo).save(user);
+    }
+
+    @Test
+    void testUpdateUserWhenUserDoesNotExist() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        UserDTO userDTO = new UserDTO(
+                1L,
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "87654321B",
+                "Main Street 2",
+                "Donostia",
+                "Gipuzkoa",
+                "20001",
+                true,
+                false
+        );
+
+        Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                NoSuchElementException.class,
+                () -> service.updateUser(99L, userDTO)
         );
 
         Mockito.verify(repo, Mockito.never()).save(Mockito.any());
