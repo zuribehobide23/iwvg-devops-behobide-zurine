@@ -11,8 +11,9 @@ import java.util.List;
 @RestController
 public class UserResource {
 
+    public static final String USER = "/user";
     public static final String USERS = "/users";
-    public static final String USER_ID = "/user/{id}";
+    public static final String USER_ID = USER + "/{id}";
     public static final String USER_ACTIVE = USER_ID + "/active";
 
     private final UserService userService;
@@ -47,5 +48,10 @@ public class UserResource {
     @PutMapping(USER_ID)
     public UserDTO updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         return new UserDTO(userService.updateUser(id, userDTO));
+    }
+
+    @PatchMapping(USER)
+    public void updateUsersActive(@RequestBody List<UserDTO> users) {
+        userService.updateUsersActive(users);
     }
 }
