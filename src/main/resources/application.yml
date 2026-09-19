@@ -1,8 +1,17 @@
+server:
+  port: 8080
+
+info:
+  app:
+    artifact: "@project.artifactId@"
+    version: "@project.version@"
+    build: "@maven.build.timestamp@"
+
 spring:
   application:
-    name: iwvg-devops-behobide-zurine
+    name: iwvg-devops-2026-develop
   profiles:
-    active: dev
+    default: dev
   output:
     ansi:
       enabled: ALWAYS
@@ -13,22 +22,23 @@ spring:
   jpa:
     open-in-view: false
 
-info:
-  app:
-    artifact: "@project.artifactId@"
-    version: "@project.version@"
-    build: "@maven.build.timestamp@"
-
-logging:
-  level:
-    root: WARN
-    es.upm.miw: DEBUG
+app:
+  hosting: localhost
+  db:
+    admin: ${DB_ADMIN:admin}
+    mobile: ${DB_MOBILE:6}
+    password: ${DB_PASSWORD:6}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
-  info:
-    env:
-      enabled: true
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: WARN
+    es.upm.api: DEBUG
