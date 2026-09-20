@@ -9,7 +9,7 @@ info:
 
 spring:
   application:
-    name: iwvg-devops-behobide-zurine
+    name: iwvg-devops-2026-develop
   profiles:
     default: dev
   output:
