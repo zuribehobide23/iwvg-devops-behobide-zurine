@@ -31,6 +31,9 @@ public class User {
 
     private boolean active = false;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.MANAGER;
+
     public User() {
     }
 
@@ -45,6 +48,13 @@ public class User {
         this.city = city;
         this.province = province;
         this.postalCode = postalCode;
+    }
+
+    public User(String firstName, String familyName, String email,
+                String identity, String address, String city,
+                String province, String postalCode, Role role) {
+        this(firstName, familyName, email, identity, address, city, province, postalCode);
+        this.role = role;
     }
 
     public Long getId() {
@@ -137,4 +147,13 @@ public class User {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
 }

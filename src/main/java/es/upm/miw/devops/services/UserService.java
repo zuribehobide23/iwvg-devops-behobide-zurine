@@ -1,6 +1,7 @@
 package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
+import es.upm.miw.devops.infrastructure.data.models.Role;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
@@ -62,8 +63,11 @@ public class UserService {
             User user = userRepository.findById(userDTO.getId())
                     .orElseThrow();
 
-            user.setActive(userDTO.isActive());
-            userRepository.save(user);
+            if (user.getRole() != Role.ADMIN || userDTO.isActive()) {
+                user.setActive(userDTO.isActive());
+                userRepository.save(user);
+            }
+
         });
     }
 }

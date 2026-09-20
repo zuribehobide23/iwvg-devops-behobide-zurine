@@ -287,4 +287,29 @@ class UserResourceFT {
                 .expectBody(UserDTO.class)
                 .value(user -> assertThat(user.isActive()).isTrue());
     }
+
+    @Test
+    void testUpdateUsersActiveDoesNotDeactivateAdmin() {
+        User admin = userRepository.findById(1L).orElseThrow();
+        admin.setActive(true);
+        userRepository.save(admin);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+        userDTO.setActive(false);
+
+        this.client.patch()
+                .uri("/user")
+                .bodyValue(List.of(userDTO))
+                .exchange()
+                .expectStatus().isOk();
+
+        this.client.get()
+                .uri("/user/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO.class)
+                .value(user -> assertThat(user.isActive()).isTrue());
+    }
+
 }
