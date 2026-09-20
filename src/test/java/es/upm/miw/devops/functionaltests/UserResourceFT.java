@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
 
@@ -138,7 +138,8 @@ class UserResourceFT {
                 "Test Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000004"
         );
         user.setActive(true);
         userRepository.save(user);
@@ -166,7 +167,8 @@ class UserResourceFT {
                 "Test Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000005"
         );
 
         User savedUser = userRepository.save(user);
@@ -190,7 +192,8 @@ class UserResourceFT {
                 "Test Street 3",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000006"
         );
         user.setActive(false);
 
@@ -223,7 +226,8 @@ class UserResourceFT {
                 "Gipuzkoa",
                 "20001",
                 true,
-                false
+                false,
+                "600000002"
         );
 
         this.client.put()
@@ -312,4 +316,103 @@ class UserResourceFT {
                 .value(user -> assertThat(user.isActive()).isTrue());
     }
 
+    @Test
+    void testFindByMobile() {
+        this.client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS)
+                        .queryParam("mobile", "600000002")
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO[].class)
+                .value(users -> assertThat(users)
+                        .singleElement()
+                        .extracting(
+                                UserDTO::getFirstName,
+                                UserDTO::getMobile
+                        )
+                        .containsExactly(
+                                "Oihana",
+                                "600000002"
+                        ));
+    }
+
+    @Test
+    void testFindByActiveAndMobile() {
+        this.client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS)
+                        .queryParam("active", false)
+                        .queryParam("mobile", "600000002")
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO[].class)
+                .value(users -> assertThat(users)
+                        .singleElement()
+                        .extracting(
+                                UserDTO::getFirstName,
+                                UserDTO::getMobile,
+                                UserDTO::isActive
+                        )
+                        .containsExactly(
+                                "Oihana",
+                                "600000002",
+                                false
+                        ));
+    }
+
+    @Test
+    void testFindByMobileAndBillable() {
+        this.client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS)
+                        .queryParam("mobile", "600000001")
+                        .queryParam("billable", true)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO[].class)
+                .value(users -> assertThat(users)
+                        .singleElement()
+                        .extracting(
+                                UserDTO::getFirstName,
+                                UserDTO::getMobile,
+                                UserDTO::isBillable
+                        )
+                        .containsExactly(
+                                "Zurine",
+                                "600000001",
+                                true
+                        ));
+    }
+
+    @Test
+    void testFindByActiveMobileAndBillable() {
+        this.client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(UserResource.USERS)
+                        .queryParam("active", false)
+                        .queryParam("mobile", "600000001")
+                        .queryParam("billable", true)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO[].class)
+                .value(users -> assertThat(users)
+                        .singleElement()
+                        .extracting(
+                                UserDTO::getFirstName,
+                                UserDTO::getMobile,
+                                UserDTO::isActive,
+                                UserDTO::isBillable
+                        )
+                        .containsExactly(
+                                "Zurine",
+                                "600000001",
+                                false,
+                                true
+                        ));
+    }
 }
