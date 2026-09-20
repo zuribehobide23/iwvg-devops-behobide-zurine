@@ -11,7 +11,6 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +29,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user));
@@ -68,7 +68,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         User nonBillableUser = new User(
@@ -79,7 +80,8 @@ class UserServiceTest {
                 "Main Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000002"
         );
 
         Mockito.when(repo.findAll())
@@ -107,7 +109,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         User nonBillableUser = new User(
@@ -118,7 +121,8 @@ class UserServiceTest {
                 "Main Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000002"
         );
 
         Mockito.when(repo.findAll())
@@ -147,7 +151,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         User nonBillableUser = new User(
@@ -158,7 +163,8 @@ class UserServiceTest {
                 "Main Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000002"
         );
 
         Mockito.when(repo.findAll()).thenReturn(List.of(billableUser, nonBillableUser));
@@ -186,7 +192,8 @@ class UserServiceTest {
                 "Test Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000004"
         );
 
         activeUser.setActive(true);
@@ -199,13 +206,14 @@ class UserServiceTest {
                 "Test Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000005"
         );
 
         inactiveUser.setActive(false);
 
-        Mockito.when(repo.findAll())
-                .thenReturn(List.of(activeUser, inactiveUser));
+        Mockito.when(repo.findByActive(true))
+                .thenReturn(List.of(activeUser));
 
         UserFindCriteria criteria = new UserFindCriteria();
         criteria.setActive(true);
@@ -230,7 +238,8 @@ class UserServiceTest {
                 "Test Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000004"
         );
 
         activeUser.setActive(true);
@@ -243,12 +252,14 @@ class UserServiceTest {
                 "Test Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000005"
         );
 
         inactiveUser.setActive(false);
 
-        Mockito.when(repo.findAll()).thenReturn(List.of(activeUser, inactiveUser));
+        Mockito.when(repo.findByActive(false))
+                .thenReturn(List.of(inactiveUser));
 
         UserFindCriteria criteria = new UserFindCriteria();
         criteria.setActive(false);
@@ -270,7 +281,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         assertTrue(user.isBillable());
@@ -286,7 +298,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         assertFalse(user.isBillable());
@@ -302,7 +315,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         assertFalse(user.isBillable());
@@ -331,7 +345,8 @@ class UserServiceTest {
                 "Test Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000006"
         );
 
         user.setActive(false);
@@ -372,7 +387,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         UserDTO userDTO = new UserDTO(
@@ -386,7 +402,8 @@ class UserServiceTest {
                 "Gipuzkoa",
                 "20001",
                 true,
-                false
+                false,
+                "600000002"
         );
 
         Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user));
@@ -422,7 +439,8 @@ class UserServiceTest {
                 "Gipuzkoa",
                 "20001",
                 true,
-                false
+                false,
+                "600000002"
         );
 
         Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
@@ -448,7 +466,8 @@ class UserServiceTest {
                 "Main Street 1",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000001"
         );
 
         User user2 = new User(
@@ -459,7 +478,8 @@ class UserServiceTest {
                 "Main Street 2",
                 "Irun",
                 "Gipuzkoa",
-                "20300"
+                "20300",
+                "600000002"
         );
 
         user1.setActive(false);
@@ -476,7 +496,7 @@ class UserServiceTest {
         Mockito.when(repo.findById(1L)).thenReturn(Optional.of(user1));
         Mockito.when(repo.findById(2L)).thenReturn(Optional.of(user2));
 
-        service.updateUsersActive(Arrays.asList(userDTO1, userDTO2));
+        service.updateUsersActive(List.of(userDTO1, userDTO2));
 
         assertTrue(user1.isActive());
         assertTrue(user2.isActive());
@@ -518,7 +538,8 @@ class UserServiceTest {
                 "Irun",
                 "Gipuzkoa",
                 "20300",
-                Role.ADMIN
+                Role.ADMIN,
+                "600000007"
         );
 
         admin.setActive(true);
@@ -535,6 +556,150 @@ class UserServiceTest {
         assertTrue(admin.isActive());
 
         Mockito.verify(repo, Mockito.never()).save(admin);
+    }
+
+    @Test
+    void testFindByMobile() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user = new User(
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "",
+                "Main Street 2",
+                "Irun",
+                "Gipuzkoa",
+                "20300",
+                "600000002"
+        );
+
+        Mockito.when(repo.findByMobile("600000002"))
+                .thenReturn(Optional.of(user));
+
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setMobile("600000002");
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Oihana", users.get(0).getFirstName());
+        assertEquals("600000002", users.get(0).getMobile());
+    }
+
+    @Test
+    void testFindByMobileNotFound() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        Mockito.when(repo.findByMobile("699999999"))
+                .thenReturn(Optional.empty());
+
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setMobile("699999999");
+
+        List<User> users = service.find(criteria).toList();
+
+        assertTrue(users.isEmpty());
+    }
+
+    @Test
+    void testFindByMobileAndActive() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user = new User(
+                "Oihana",
+                "Example",
+                "oihana@example.com",
+                "",
+                "Main Street 2",
+                "Irun",
+                "Gipuzkoa",
+                "20300",
+                "600000002"
+        );
+
+        user.setActive(true);
+
+        Mockito.when(repo.findByMobileAndActive("600000002", true))
+                .thenReturn(Optional.of(user));
+
+        UserFindCriteria criteria = new UserFindCriteria(true, "600000002");
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Oihana", users.get(0).getFirstName());
+        assertTrue(users.get(0).isActive());
+    }
+
+    @Test
+    void testFindByMobileAndBillable() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user = new User(
+                "Zurine",
+                "Behobide",
+                "zurine@example.com",
+                "12345678A",
+                "Main Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300",
+                "600000001"
+        );
+
+        Mockito.when(repo.findByMobile("600000001"))
+                .thenReturn(Optional.of(user));
+
+        UserFindCriteria criteria = new UserFindCriteria();
+        criteria.setMobile("600000001");
+        criteria.setBillable(true);
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Zurine", users.get(0).getFirstName());
+        assertTrue(users.get(0).isBillable());
+    }
+
+    @Test
+    void testFindByActiveMobileAndBillable() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User user = new User(
+                "Zurine",
+                "Behobide",
+                "zurine@example.com",
+                "12345678A",
+                "Main Street 1",
+                "Irun",
+                "Gipuzkoa",
+                "20300",
+                "600000001"
+        );
+
+        user.setActive(false);
+
+        Mockito.when(repo.findByMobileAndActive("600000001", false))
+                .thenReturn(Optional.of(user));
+
+        UserFindCriteria criteria = new UserFindCriteria(
+                false,
+                "600000001",
+                true
+        );
+
+        List<User> users = service.find(criteria).toList();
+
+        assertEquals(1, users.size());
+        assertEquals("Zurine", users.get(0).getFirstName());
+        assertFalse(users.get(0).isActive());
+        assertTrue(users.get(0).isBillable());
     }
 
 }
