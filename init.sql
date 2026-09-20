@@ -1,19 +1,19 @@
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
-                       id SERIAL PRIMARY KEY,
-                       first_name VARCHAR(100),
-                       family_name VARCHAR(100),
-                       email VARCHAR(150),
-                       identity VARCHAR(100),
-                       address VARCHAR(150),
-                       city VARCHAR(100),
-                       province VARCHAR(100),
-                       postal_code VARCHAR(20),
-                       active BOOLEAN DEFAULT FALSE
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100),
+    family_name VARCHAR(100),
+    email VARCHAR(150),
+    identity VARCHAR(100),
+    address VARCHAR(150),
+    city VARCHAR(100),
+    province VARCHAR(100),
+    postal_code VARCHAR(20),
+    active BOOLEAN DEFAULT FALSE,
+    role VARCHAR(20) NOT NULL
 );
 
--- Billable user
 INSERT INTO users (
     first_name,
     family_name,
@@ -22,7 +22,9 @@ INSERT INTO users (
     address,
     city,
     province,
-    postal_code
+    postal_code,
+    active,
+    role
 ) VALUES (
              'Zurine',
              'Behobide',
@@ -31,10 +33,11 @@ INSERT INTO users (
              'Main Street 1',
              'Irun',
              'Gipuzkoa',
-             '20300'
+             '20300',
+             FALSE,
+             'ADMIN'
          );
 
--- Not billable: identity is empty
 INSERT INTO users (
     first_name,
     family_name,
@@ -43,7 +46,9 @@ INSERT INTO users (
     address,
     city,
     province,
-    postal_code
+    postal_code,
+    active,
+    role
 ) VALUES (
              'Oihana',
              'Example',
@@ -52,10 +57,11 @@ INSERT INTO users (
              'Main Street 2',
              'Irun',
              'Gipuzkoa',
-             '20300'
+             '20300',
+             FALSE,
+             'MANAGER'
          );
 
--- Not billable: email is missing
 INSERT INTO users (
     first_name,
     family_name,
@@ -64,7 +70,9 @@ INSERT INTO users (
     address,
     city,
     province,
-    postal_code
+    postal_code,
+    active,
+    role
 ) VALUES (
              'Unax',
              'Example',
@@ -73,6 +81,9 @@ INSERT INTO users (
              'Main Street 3',
              'Irun',
              'Gipuzkoa',
-             '20300'
+             '20300',
+             FALSE,
+             'MANAGER'
          );
+
 SELECT * FROM users;
