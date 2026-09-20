@@ -11,7 +11,8 @@ CREATE TABLE users (
     province VARCHAR(100),
     postal_code VARCHAR(20),
     active BOOLEAN DEFAULT FALSE,
-    role VARCHAR(20) NOT NULL
+    role VARCHAR(20) NOT NULL,
+    mobile VARCHAR(20)
 );
 
 INSERT INTO users (
@@ -24,7 +25,8 @@ INSERT INTO users (
     province,
     postal_code,
     active,
-    role
+    role,
+    mobile
 ) VALUES (
              'Zurine',
              'Behobide',
@@ -35,7 +37,8 @@ INSERT INTO users (
              'Gipuzkoa',
              '20300',
              FALSE,
-             'ADMIN'
+             'ADMIN',
+             '600000001'
          );
 
 INSERT INTO users (
@@ -48,7 +51,8 @@ INSERT INTO users (
     province,
     postal_code,
     active,
-    role
+    role,
+    mobile
 ) VALUES (
              'Oihana',
              'Example',
@@ -59,7 +63,8 @@ INSERT INTO users (
              'Gipuzkoa',
              '20300',
              FALSE,
-             'MANAGER'
+             'MANAGER',
+             '600000002'
          );
 
 INSERT INTO users (
@@ -72,7 +77,8 @@ INSERT INTO users (
     province,
     postal_code,
     active,
-    role
+    role,
+    mobile
 ) VALUES (
              'Unax',
              'Example',
@@ -83,7 +89,8 @@ INSERT INTO users (
              'Gipuzkoa',
              '20300',
              FALSE,
-             'MANAGER'
+             'MANAGER',
+             '600000003'
          );
 
 SELECT * FROM users;
