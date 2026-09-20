@@ -1,6 +1,7 @@
 package es.upm.miw.devops.services;
 
 import es.upm.miw.devops.infrastructure.data.daos.UserRepository;
+import es.upm.miw.devops.infrastructure.data.models.Role;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
@@ -502,4 +503,38 @@ class UserServiceTest {
 
         Mockito.verify(repo, Mockito.never()).save(Mockito.any());
     }
+
+    @Test
+    void testUpdateUsersActiveDoesNotDeactivateAdmin() {
+        UserRepository repo = Mockito.mock(UserRepository.class);
+        UserService service = new UserService(repo);
+
+        User admin = new User(
+                "Admin",
+                "User",
+                "admin@example.com",
+                "12345678A",
+                "Admin Street",
+                "Irun",
+                "Gipuzkoa",
+                "20300",
+                Role.ADMIN
+        );
+
+        admin.setActive(true);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(1L);
+        userDTO.setActive(false);
+
+        Mockito.when(repo.findById(1L))
+                .thenReturn(Optional.of(admin));
+
+        service.updateUsersActive(List.of(userDTO));
+
+        assertTrue(admin.isActive());
+
+        Mockito.verify(repo, Mockito.never()).save(admin);
+    }
+
 }
