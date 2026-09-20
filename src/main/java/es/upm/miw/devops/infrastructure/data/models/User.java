@@ -34,12 +34,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.MANAGER;
 
+    private String mobile;
+
     public User() {
     }
 
     public User(String firstName, String familyName, String email,
                 String identity, String address, String city,
-                String province, String postalCode) {
+                String province, String postalCode, String mobile) {
         this.firstName = firstName;
         this.familyName = familyName;
         this.email = email;
@@ -48,12 +50,13 @@ public class User {
         this.city = city;
         this.province = province;
         this.postalCode = postalCode;
+        this.mobile = mobile;
     }
 
     public User(String firstName, String familyName, String email,
                 String identity, String address, String city,
-                String province, String postalCode, Role role) {
-        this(firstName, familyName, email, identity, address, city, province, postalCode);
+                String province, String postalCode, Role role, String mobile) {
+        this(firstName, familyName, email, identity, address, city, province, postalCode, mobile);
         this.role = role;
     }
 
@@ -156,4 +159,11 @@ public class User {
         this.role = role;
     }
 
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 }

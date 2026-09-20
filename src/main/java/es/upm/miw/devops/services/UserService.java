@@ -20,14 +20,12 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElse(null);
+        return userRepository.findById(id).orElse(null);
     }
 
     public Stream<User> find(UserFindCriteria criteria) {
-        return userRepository.findAll().stream()
-                .filter(user -> !criteria.hasActive() || user.isActive() == criteria.getActive())
-                .filter(user -> !criteria.hasBillable() || user.isBillable() == criteria.getBillable());
+        return this.findByActiveAndMobile(criteria)
+                .filter(user -> this.matchBillable(criteria, user));
     }
 
     public void deleteUser(Long id) {
@@ -35,16 +33,13 @@ public class UserService {
     }
 
     public void activateUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow();
-
+        User user = userRepository.findById(id).orElseThrow();
         user.setActive(true);
         userRepository.save(user);
     }
 
     public User updateUser(Long id, UserDTO userDTO) {
-        User user = userRepository.findById(id)
-                .orElseThrow();
+        User user = userRepository.findById(id).orElseThrow();
 
         user.setFirstName(userDTO.getFirstName());
         user.setFamilyName(userDTO.getFamilyName());
@@ -60,14 +55,39 @@ public class UserService {
 
     public void updateUsersActive(List<UserDTO> usersDTO) {
         usersDTO.forEach(userDTO -> {
-            User user = userRepository.findById(userDTO.getId())
-                    .orElseThrow();
+            User user = userRepository.findById(userDTO.getId()).orElseThrow();
 
             if (user.getRole() != Role.ADMIN || userDTO.isActive()) {
                 user.setActive(userDTO.isActive());
                 userRepository.save(user);
             }
-
         });
+    }
+
+    private Stream<User> findByActiveAndMobile(UserFindCriteria criteria) {
+        if (!criteria.hasActive() && !criteria.hasMobile()) {
+            return this.userRepository.findAll().stream();
+        }
+
+        if (criteria.hasMobile() && criteria.hasActive()) {
+            return this.userRepository
+                    .findByMobileAndActive(criteria.getMobile(), criteria.getActive())
+                    .stream();
+        }
+
+        if (criteria.hasMobile()) {
+            return this.userRepository
+                    .findByMobile(criteria.getMobile())
+                    .stream();
+        }
+
+        return this.userRepository
+                .findByActive(criteria.getActive())
+                .stream();
+    }
+
+    private boolean matchBillable(UserFindCriteria criteria, User user) {
+        return !criteria.hasBillable()
+                || user.isBillable() == criteria.getBillable();
     }
 }

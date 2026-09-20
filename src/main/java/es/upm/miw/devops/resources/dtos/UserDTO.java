@@ -15,6 +15,7 @@ public class UserDTO {
     private String postalCode;
     private boolean billable;
     private boolean active;
+    private String mobile;
 
     public UserDTO() {
     }
@@ -22,7 +23,7 @@ public class UserDTO {
     public UserDTO(Long id, String firstName, String familyName,
                    String email, String identity, String address,
                    String city, String province, String postalCode,
-                   boolean billable, boolean active) {
+                   boolean billable, boolean active, String mobile) {
         this.id = id;
         this.firstName = firstName;
         this.familyName = familyName;
@@ -34,6 +35,7 @@ public class UserDTO {
         this.postalCode = postalCode;
         this.billable = billable;
         this.active = active;
+        this.mobile = mobile;
     }
 
     public UserDTO(User user) {
@@ -48,6 +50,7 @@ public class UserDTO {
         this.postalCode = user.getPostalCode();
         this.billable = user.isBillable();
         this.active = user.isActive();
+        this.mobile = user.getMobile();
     }
 
     public Long getId() {
@@ -132,5 +135,13 @@ public class UserDTO {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }
