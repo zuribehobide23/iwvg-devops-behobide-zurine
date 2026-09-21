@@ -1,4 +1,4 @@
-  name: CD
+  name: CD MASTER
   on:
     push:
       branches:
@@ -53,7 +53,7 @@
             script: |
               echo ${{ secrets.GHCR_PERSONAL_ACCESS_TOKEN }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
               
-              sudo docker pull ghcr.io/${{ env.REPOSITORY }}:latest
+              sudo docker pull ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
               
               sudo docker rm -f ${{ env.ARTIFACT }} || true
               
@@ -67,7 +67,7 @@
                 -e SPRING_PROFILES_ACTIVE=prod \
                 -e POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
                 -e POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
-                ghcr.io/${{ env.REPOSITORY }}:latest
+                ghcr.io/${{ env.REPOSITORY }}:${{ env.VERSION }}
               
               echo "⏳ Esperando a que se levante"
               

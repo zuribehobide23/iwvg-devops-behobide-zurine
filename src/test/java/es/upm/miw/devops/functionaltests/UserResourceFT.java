@@ -246,7 +246,8 @@ class UserResourceFT {
                                 UserDTO::getAddress,
                                 UserDTO::getCity,
                                 UserDTO::getProvince,
-                                UserDTO::getPostalCode
+                                UserDTO::getPostalCode,
+                                UserDTO::getMobile
                         )
                         .containsExactly(
                                 1L,
@@ -257,7 +258,8 @@ class UserResourceFT {
                                 "Main Street 2",
                                 "Donostia",
                                 "Gipuzkoa",
-                                "20001"
+                                "20001",
+                                "600000002"
                         ));
     }
 
