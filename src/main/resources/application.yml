@@ -9,7 +9,7 @@ info:
 
 spring:
   application:
-    name: iwvg-devops-2026-develop
+    name: iwvg-devops-behobide-zurine
   profiles:
     default: dev
   output:
@@ -41,4 +41,4 @@ management:
 logging:
   level:
     root: WARN
-    es.upm.api: DEBUG
+    es.upm.miw.devops: DEBUG

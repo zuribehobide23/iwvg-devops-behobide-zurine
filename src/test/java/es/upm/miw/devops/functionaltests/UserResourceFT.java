@@ -174,7 +174,7 @@ class UserResourceFT {
         User savedUser = userRepository.save(user);
 
         this.client.delete()
-                .uri("/user/" + savedUser.getId())
+                .uri(UserResource.USER_ID.replace("{id}", savedUser.getId().toString()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
@@ -200,14 +200,13 @@ class UserResourceFT {
         User savedUser = userRepository.save(user);
 
         this.client.put()
-                .uri("/user/" + savedUser.getId() + "/active")
+                .uri(UserResource.USER_ACTIVE.replace("{id}", savedUser.getId().toString()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().isEmpty();
 
         this.client.get()
-                .uri("/user/" + savedUser.getId())
-                .exchange()
+                .uri(UserResource.USER_ID.replace("{id}", savedUser.getId().toString())).exchange()
                 .expectStatus().isOk()
                 .expectBody(UserDTO.class)
                 .value(result -> assertThat(result.isActive()).isTrue());
@@ -231,7 +230,7 @@ class UserResourceFT {
         );
 
         this.client.put()
-                .uri("/user/1")
+                .uri(UserResource.USER_ID.replace("{id}", "1"))
                 .bodyValue(userDTO)
                 .exchange()
                 .expectStatus().isOk()
@@ -246,7 +245,8 @@ class UserResourceFT {
                                 UserDTO::getAddress,
                                 UserDTO::getCity,
                                 UserDTO::getProvince,
-                                UserDTO::getPostalCode
+                                UserDTO::getPostalCode,
+                                UserDTO::getMobile
                         )
                         .containsExactly(
                                 1L,
@@ -257,7 +257,8 @@ class UserResourceFT {
                                 "Main Street 2",
                                 "Donostia",
                                 "Gipuzkoa",
-                                "20001"
+                                "20001",
+                                "600000002"
                         ));
     }
 
@@ -272,20 +273,20 @@ class UserResourceFT {
         user2.setActive(true);
 
         this.client.patch()
-                .uri("/user")
+                .uri(UserResource.USER)
                 .bodyValue(List.of(user1, user2))
                 .exchange()
                 .expectStatus().isOk();
 
         this.client.get()
-                .uri("/user/1")
+                .uri(UserResource.USER_ID.replace("{id}", "1"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserDTO.class)
                 .value(user -> assertThat(user.isActive()).isTrue());
 
         this.client.get()
-                .uri("/user/2")
+                .uri(UserResource.USER_ID.replace("{id}", "2"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserDTO.class)
@@ -303,13 +304,13 @@ class UserResourceFT {
         userDTO.setActive(false);
 
         this.client.patch()
-                .uri("/user")
+                .uri(UserResource.USER)
                 .bodyValue(List.of(userDTO))
                 .exchange()
                 .expectStatus().isOk();
 
         this.client.get()
-                .uri("/user/1")
+                .uri(UserResource.USER_ID.replace("{id}", "1"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserDTO.class)
