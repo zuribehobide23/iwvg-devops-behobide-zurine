@@ -70,7 +70,7 @@ jobs:
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
-      - name: Notificar éxito a Slack
+      - name: Notify Slack on success
         if: success()
         uses: slackapi/slack-github-action@v1.26.0
         with:
@@ -81,7 +81,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Notificar fallo a Slack
+      - name: Notify Slack on failure
         if: failure()
         uses: slackapi/slack-github-action@v1.26.0
         with:

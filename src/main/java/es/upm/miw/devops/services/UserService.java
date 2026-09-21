@@ -49,6 +49,7 @@ public class UserService {
         user.setCity(userDTO.getCity());
         user.setProvince(userDTO.getProvince());
         user.setPostalCode(userDTO.getPostalCode());
+        user.setMobile(userDTO.getMobile());
 
         return userRepository.save(user);
     }

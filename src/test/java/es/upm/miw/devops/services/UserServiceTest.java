@@ -5,6 +5,7 @@ import es.upm.miw.devops.infrastructure.data.models.Role;
 import es.upm.miw.devops.infrastructure.data.models.User;
 import es.upm.miw.devops.resources.dtos.UserDTO;
 import es.upm.miw.devops.services.criteria.UserFindCriteria;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,11 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 
+    private UserRepository repo;
+    private UserService service;
+
+    @BeforeEach
+    void setup() {
+        repo = Mockito.mock(UserRepository.class);
+        service = new UserService(repo);
+    }
+
     @Test
     void testGetUserById() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Zurine",
                 "Behobide",
@@ -45,9 +52,6 @@ class UserServiceTest {
 
     @Test
     void testGetUserByIdNotFound() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
 
         User result = service.getUserById(99L);
@@ -57,9 +61,6 @@ class UserServiceTest {
 
     @Test
     void testFindAllUsers() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User billableUser = new User(
                 "Zurine",
                 "Behobide",
@@ -98,9 +99,6 @@ class UserServiceTest {
 
     @Test
     void testFindByBillable() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User billableUser = new User(
                 "Zurine",
                 "Behobide",
@@ -140,9 +138,6 @@ class UserServiceTest {
 
     @Test
     void testFindByNotBillable() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User billableUser = new User(
                 "Zurine",
                 "Behobide",
@@ -181,9 +176,6 @@ class UserServiceTest {
 
     @Test
     void testFindByActive() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User activeUser = new User(
                 "Active",
                 "User",
@@ -221,15 +213,12 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Active", users.get(0).getFirstName());
-        assertTrue(users.get(0).isActive());
+        assertEquals("Active", users.getFirst().getFirstName());
+        assertTrue(users.getFirst().isActive());
     }
 
     @Test
     void testFindByInactive() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User activeUser = new User(
                 "Active",
                 "User",
@@ -267,8 +256,8 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Inactive", users.get(0).getFirstName());
-        assertFalse(users.get(0).isActive());
+        assertEquals("Inactive", users.getFirst().getFirstName());
+        assertFalse(users.getFirst().isActive());
     }
 
     @Test
@@ -324,9 +313,6 @@ class UserServiceTest {
 
     @Test
     void testDeleteUser() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         service.deleteUser(1L);
 
         Mockito.verify(repo).deleteById(1L);
@@ -334,9 +320,6 @@ class UserServiceTest {
 
     @Test
     void testActivateUser() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Test",
                 "Active",
@@ -361,9 +344,6 @@ class UserServiceTest {
 
     @Test
     void testActivateUserWhenUserDoesNotExist() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(
@@ -376,9 +356,6 @@ class UserServiceTest {
 
     @Test
     void testUpdateUser() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Zurine",
                 "Behobide",
@@ -419,15 +396,13 @@ class UserServiceTest {
         assertEquals("Donostia", result.getCity());
         assertEquals("Gipuzkoa", result.getProvince());
         assertEquals("20001", result.getPostalCode());
+        assertEquals("600000002", result.getMobile());
 
         Mockito.verify(repo).save(user);
     }
 
     @Test
     void testUpdateUserWhenUserDoesNotExist() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         UserDTO userDTO = new UserDTO(
                 1L,
                 "Oihana",
@@ -455,9 +430,6 @@ class UserServiceTest {
 
     @Test
     void testUpdateUsersActive() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user1 = new User(
                 "Zurine",
                 "Behobide",
@@ -507,9 +479,6 @@ class UserServiceTest {
 
     @Test
     void testUpdateUsersActiveWhenUserDoesNotExist() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         UserDTO userDTO = new UserDTO();
         userDTO.setId(99L);
         userDTO.setActive(true);
@@ -526,9 +495,6 @@ class UserServiceTest {
 
     @Test
     void testUpdateUsersActiveDoesNotDeactivateAdmin() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User admin = new User(
                 "Admin",
                 "User",
@@ -560,9 +526,6 @@ class UserServiceTest {
 
     @Test
     void testFindByMobile() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Oihana",
                 "Example",
@@ -584,15 +547,12 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Oihana", users.get(0).getFirstName());
-        assertEquals("600000002", users.get(0).getMobile());
+        assertEquals("Oihana", users.getFirst().getFirstName());
+        assertEquals("600000002", users.getFirst().getMobile());
     }
 
     @Test
     void testFindByMobileNotFound() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         Mockito.when(repo.findByMobile("699999999"))
                 .thenReturn(Optional.empty());
 
@@ -606,9 +566,6 @@ class UserServiceTest {
 
     @Test
     void testFindByMobileAndActive() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Oihana",
                 "Example",
@@ -631,15 +588,12 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Oihana", users.get(0).getFirstName());
-        assertTrue(users.get(0).isActive());
+        assertEquals("Oihana", users.getFirst().getFirstName());
+        assertTrue(users.getFirst().isActive());
     }
 
     @Test
     void testFindByMobileAndBillable() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Zurine",
                 "Behobide",
@@ -662,15 +616,12 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Zurine", users.get(0).getFirstName());
-        assertTrue(users.get(0).isBillable());
+        assertEquals("Zurine", users.getFirst().getFirstName());
+        assertTrue(users.getFirst().isBillable());
     }
 
     @Test
     void testFindByActiveMobileAndBillable() {
-        UserRepository repo = Mockito.mock(UserRepository.class);
-        UserService service = new UserService(repo);
-
         User user = new User(
                 "Zurine",
                 "Behobide",
@@ -697,9 +648,9 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Zurine", users.get(0).getFirstName());
-        assertFalse(users.get(0).isActive());
-        assertTrue(users.get(0).isBillable());
+        assertEquals("Zurine", users.getFirst().getFirstName());
+        assertFalse(users.getFirst().isActive());
+        assertTrue(users.getFirst().isBillable());
     }
 
 }
