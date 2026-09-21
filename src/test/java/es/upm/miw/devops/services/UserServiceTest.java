@@ -213,8 +213,8 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Active", users.get(0).getFirstName());
-        assertTrue(users.get(0).isActive());
+        assertEquals("Active", users.getFirst().getFirstName());
+        assertTrue(users.getFirst().isActive());
     }
 
     @Test
@@ -256,8 +256,8 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Inactive", users.get(0).getFirstName());
-        assertFalse(users.get(0).isActive());
+        assertEquals("Inactive", users.getFirst().getFirstName());
+        assertFalse(users.getFirst().isActive());
     }
 
     @Test
@@ -547,8 +547,8 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Oihana", users.get(0).getFirstName());
-        assertEquals("600000002", users.get(0).getMobile());
+        assertEquals("Oihana", users.getFirst().getFirstName());
+        assertEquals("600000002", users.getFirst().getMobile());
     }
 
     @Test
@@ -588,8 +588,8 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Oihana", users.get(0).getFirstName());
-        assertTrue(users.get(0).isActive());
+        assertEquals("Oihana", users.getFirst().getFirstName());
+        assertTrue(users.getFirst().isActive());
     }
 
     @Test
@@ -616,8 +616,8 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Zurine", users.get(0).getFirstName());
-        assertTrue(users.get(0).isBillable());
+        assertEquals("Zurine", users.getFirst().getFirstName());
+        assertTrue(users.getFirst().isBillable());
     }
 
     @Test
@@ -648,9 +648,9 @@ class UserServiceTest {
         List<User> users = service.find(criteria).toList();
 
         assertEquals(1, users.size());
-        assertEquals("Zurine", users.get(0).getFirstName());
-        assertFalse(users.get(0).isActive());
-        assertTrue(users.get(0).isBillable());
+        assertEquals("Zurine", users.getFirst().getFirstName());
+        assertFalse(users.getFirst().isActive());
+        assertTrue(users.getFirst().isBillable());
     }
 
 }
